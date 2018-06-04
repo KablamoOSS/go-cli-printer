@@ -22,7 +22,7 @@ func getPrinter() *spinner.Spinner {
 	return instantiated
 }
 
-//  Progress message with a spinner
+// Progress message with a spinner
 func Progress(message string) {
 	spinner := getPrinter()
 	spinner.Suffix = fmt.Sprintf("  %s", message)
@@ -84,7 +84,7 @@ func Finish(message string) {
 func Error(err error, resolution string, link string) {
 	spinner := getPrinter()
 
-	errMessage := fmt.Sprintf("%s  Error: %s \nHow to fix: %s \n", chalk.Red.Color("✖"), err, chalk.Dim.TextStyle(resolution))
+	errMessage := fmt.Sprintf("%s  Error: %s \nHow to fix: %s \n", chalk.Red.Color("✖"), chalk.Red.Color(err.Error()), chalk.Dim.TextStyle(resolution))
 
 	if link != "" {
 		errMessage = fmt.Sprintf("%s\n More information: %s", errMessage, chalk.Dim.TextStyle(link))
@@ -101,7 +101,7 @@ func Error(err error, resolution string, link string) {
 func Fatal(err error, resolution string, link string) {
 	spinner := getPrinter()
 
-	errMessage := fmt.Sprintf("%s  Fatal: %s \nHow to fix: %s \n", chalk.Red.Color("✖"), err, chalk.Dim.TextStyle(resolution))
+	errMessage := fmt.Sprintf("%s  Fatal: %s \nHow to fix: %s \n", chalk.Red.Color("✖"), chalk.Red.Color(err.Error()), chalk.Dim.TextStyle(resolution))
 
 	// Add the link if a valid one was supplied
 	if link != "" {
