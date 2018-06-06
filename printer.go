@@ -12,13 +12,36 @@ import (
 var instantiated *spinner.Spinner
 var once sync.Once
 
+var verbose bool
+var color string
+var spinnerStyle int
+
+func init(){
+	verbose = false
+	color = "yellow"
+	spinnerStyle = 14
+}
+
+// Init the spinner with a verbose flag, and color.
+// This is optional, and allows some customisation over the printer.
+// You should do invoke this as early as posisble, before the first printer function
+// is called.
+func Init(initVerbose bool, initColor string, initSpinner int) {
+	verbose = initVerbose
+	color = initColor
+	spinnerStyle = initSpinner
+
+	getPrinter()
+}
+
 // Create a singleton to the Spinner
 // This ensures we only output to one line
 func getPrinter() *spinner.Spinner {
-	once.Do(func() {
-		instantiated = spinner.New(spinner.CharSets[14], 100*time.Millisecond)
-	})
-
+	if instantiated == nil {
+		once.Do(func() {
+			instantiated = spinner.New(spinner.CharSets[spinnerStyle], 100*time.Millisecond)
+		})
+	}
 	return instantiated
 }
 
@@ -26,7 +49,7 @@ func getPrinter() *spinner.Spinner {
 func Progress(message string) {
 	spinner := getPrinter()
 	spinner.Suffix = fmt.Sprintf("  %s", message)
-	spinner.Color("yellow")
+	spinner.Color(color)
 	spinner.Start()
 }
 
@@ -41,40 +64,43 @@ func Step(message string) {
 
 // SubStep prints a line console, at a given indent and stops the spinner
 func SubStep(message string, indent int, last bool) {
-	var indentString string
-
-	for i := 1; i <= indent; i++ {
-		indentString = fmt.Sprintf("   %s", indentString)
+	// Substeps are only printed if the verbose flag is set at init
+	if verbose {
+		var indentString string
+		
+		for i := 1; i <= indent; i++ {
+			indentString = fmt.Sprintf("   %s", indentString)
+		}
+		
+		icon := ""
+		
+		switch indent {
+		case 1:
+			icon = "└─"
+		default:
+			icon = "├─"
+		}
+		
+		if last {
+			icon = "└─"
+		}
+		
+		spinner := getPrinter()
+		spinner.FinalMSG = fmt.Sprintf("%s%s %s \n", chalk.Dim.TextStyle(indentString), chalk.Dim.TextStyle(icon), chalk.Dim.TextStyle(message))
+		spinner.Start()
+		time.Sleep(2 * time.Second)
+		spinner.Stop()
 	}
-
-	icon := ""
-
-	switch indent {
-	case 1:
-		icon = "└─"
-	default:
-		icon = "├─"
-	}
-
-	if last {
-		icon = "└─"
-	}
-
-	spinner := getPrinter()
-	spinner.FinalMSG = fmt.Sprintf("%s%s %s \n", chalk.Dim.TextStyle(indentString), chalk.Dim.TextStyle(icon), chalk.Dim.TextStyle(message))
-	spinner.Start()
-	time.Sleep(2 * time.Second)
-	spinner.Stop()
 }
-
+	
 // Finish prints message to the console and stops the spinner with success.
 // This is best used to indicated the end of a task
 func Finish(message string) {
-	spinner := getPrinter()
-	spinner.FinalMSG = fmt.Sprintf("%s  %s \n", chalk.Green.Color("✔"), chalk.Bold.TextStyle(message))
-	spinner.Start()
-	time.Sleep(2 * time.Second)
-	spinner.Stop()
+		spinner := getPrinter()
+		spinner.FinalMSG = fmt.Sprintf("%s  %s \n", chalk.Green.Color("✔"), chalk.Bold.TextStyle(message))
+		spinner.Start()
+		time.Sleep(2 * time.Second)
+		spinner.Stop()
 }
 
 // Error prints an error to the screen. As it's intended reader is a user of your program,
