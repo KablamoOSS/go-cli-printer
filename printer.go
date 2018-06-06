@@ -56,7 +56,7 @@ func Progress(message string) {
 // Step prints a line console and stops the spinner
 func Step(message string) {
 	spinner := getPrinter()
-	spinner.FinalMSG = fmt.Sprintf("%s  %s \n", chalk.Yellow.Color(chalk.Dim.TextStyle("➜")), chalk.Bold.TextStyle(message))
+	spinner.FinalMSG = fmt.Sprintf("%s  %s \n", chalk.Yellow.Color("➜"), chalk.Bold.TextStyle(message))
 	spinner.Start()
 	time.Sleep(2 * time.Second)
 	spinner.Stop()
