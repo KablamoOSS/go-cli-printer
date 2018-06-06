@@ -77,7 +77,8 @@ func SubStep(message string, indent int, last bool) {
 	if message != previousSubStepMessage {
 		previousSubStepMessage = message
 		// Substeps are only printed if the verbose flag is set at init
-		if verbose {
+		// Unless it's the last substep
+		if verbose || last {
 			var indentString string
 
 			for i := 1; i <= indent; i++ {
