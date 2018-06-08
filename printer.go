@@ -122,14 +122,20 @@ func Error(err error, resolution string, link string) {
 
 	spinner.Stop()
 	errMessage := fmt.Sprintf(
-		"%s %s\nResolution:\n%s",
-		chalk.Red.Color("✖  Error:"),
+		"%s %s \n%s%s",
+		chalk.Bold.TextStyle(chalk.Red.Color("✖  Error:")),
 		chalk.Red.Color(err.Error()),
+		chalk.Dim.TextStyle(chalk.Bold.TextStyle("★  Resolution: ")),
 		chalk.Dim.TextStyle(resolution),
 	)
 
 	if link != "" {
-		errMessage = fmt.Sprintf("%s\n More information: %s", errMessage, chalk.Dim.TextStyle(link))
+		errMessage = fmt.Sprintf(
+			"%s\n%s%s",
+			errMessage,
+			chalk.Dim.TextStyle(chalk.Bold.TextStyle("🔗  More info: ")),
+			chalk.Italic.TextStyle(link),
+		)
 	}
 
 	fmt.Println(errMessage)
@@ -141,15 +147,21 @@ func Fatal(err error, resolution string, link string) {
 	spinner := getPrinter()
 
 	errMessage := fmt.Sprintf(
-		"%s %s \n   Resolution: %s",
-		chalk.Red.Color("✖ Fatal:"),
+		"%s %s \n%s%s",
+		chalk.Bold.TextStyle(chalk.Red.Color("✖  Fatal:")),
 		chalk.Red.Color(err.Error()),
+		chalk.Dim.TextStyle(chalk.Bold.TextStyle("★  Resolution: ")),
 		chalk.Dim.TextStyle(resolution),
 	)
 
 	// Add the link if a valid one was supplied
 	if link != "" {
-		errMessage = fmt.Sprintf("%s\n   More information: %s", errMessage, chalk.Dim.TextStyle(link))
+		errMessage = fmt.Sprintf(
+			"%s\n%s%s",
+			errMessage,
+			chalk.Dim.TextStyle(chalk.Bold.TextStyle("🔗  More info: ")),
+			chalk.Italic.TextStyle(link),
+		)
 	}
 
 	spinner.Stop()
