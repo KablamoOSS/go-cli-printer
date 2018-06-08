@@ -54,11 +54,11 @@ func getPrinter() *spinner.Spinner {
 func Progress(message string) {
 	spinner := getPrinter()
 	if message != previousProgressMessage {
-	previousProgressMessage = message
-	spinner.Suffix = fmt.Sprintf("  %s", message)
-	spinner.Color(color)
-}
-spinner.Start()
+		previousProgressMessage = message
+		spinner.Suffix = fmt.Sprintf("  %s", message)
+		spinner.Color(color)
+	}
+	spinner.Start()
 }
 
 // Step prints a line console and stops the spinner
@@ -110,7 +110,7 @@ func SubStep(message string, indent int, last bool) {
 func Finish(message string) {
 	spinner := getPrinter()
 	spinner.Stop()
-fmt.Println(fmt.Sprintf("%s  %s", chalk.Green.Color("✔"), chalk.Bold.TextStyle(message)))
+	fmt.Println(fmt.Sprintf("%s  %s", chalk.Green.Color("✔"), chalk.Bold.TextStyle(message)))
 }
 
 // Error prints an error to the screen. As it's intended reader is a user of your program,
@@ -121,7 +121,12 @@ func Error(err error, resolution string, link string) {
 	spinner := getPrinter()
 
 	spinner.Stop()
-	errMessage := fmt.Sprintf("%s  Error: %s \nHow to fix: %s \n", chalk.Red.Color("✖"), chalk.Red.Color(err.Error()), chalk.Dim.TextStyle(resolution))
+	errMessage := fmt.Sprintf(
+		"%s  Error: %s \nHow to fix: %s",
+		chalk.Red.Color("✖"),
+		chalk.Red.Color(err.Error()),
+		chalk.Dim.TextStyle(resolution),
+	)
 
 	if link != "" {
 		errMessage = fmt.Sprintf("%s\n More information: %s", errMessage, chalk.Dim.TextStyle(link))
@@ -135,11 +140,16 @@ func Error(err error, resolution string, link string) {
 func Fatal(err error, resolution string, link string) {
 	spinner := getPrinter()
 
-	errMessage := fmt.Sprintf("%s  Fatal: %s \nHow to fix: %s \n", chalk.Red.Color("✖"), chalk.Red.Color(err.Error()), chalk.Dim.TextStyle(resolution))
+	errMessage := fmt.Sprintf(
+		"%s  Fatal: %s \n   How to fix: %s",
+		chalk.Red.Color("✖"),
+		chalk.Red.Color(err.Error()),
+		chalk.Dim.TextStyle(resolution),
+	)
 
 	// Add the link if a valid one was supplied
 	if link != "" {
-		errMessage = fmt.Sprintf("%s\n More information: %s", errMessage, chalk.Dim.TextStyle(link))
+		errMessage = fmt.Sprintf("%s\n   More information: %s", errMessage, chalk.Dim.TextStyle(link))
 	}
 
 	spinner.Stop()
