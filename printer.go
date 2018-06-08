@@ -122,10 +122,10 @@ func Error(err error, resolution string, link string) {
 
 	spinner.Stop()
 	errMessage := fmt.Sprintf(
-		"%s  ERROR:\n%s\nHow to fix:\n%s",
-		chalk.Red.Color("✖"),
-		LeftPad(chalk.Red.Color(err.Error()), 4, " "),
-		LeftPad(chalk.Dim.TextStyle(resolution), 4, " "),
+		"%s %s\nResolution:\n%s",
+		chalk.Red.Color("✖  Error:"),
+		chalk.Red.Color(err.Error()),
+		chalk.Dim.TextStyle(resolution),
 	)
 
 	if link != "" {
@@ -141,10 +141,10 @@ func Fatal(err error, resolution string, link string) {
 	spinner := getPrinter()
 
 	errMessage := fmt.Sprintf(
-		"%s  FATAL: %s \n   How to fix: %s",
-		chalk.Red.Color("✖"),
-		LeftPad(chalk.Red.Color(err.Error()), 4, " "),
-		LeftPad(chalk.Dim.TextStyle(resolution), 4, " "),
+		"%s %s \n   Resolution: %s",
+		chalk.Red.Color("✖ Fatal:"),
+		chalk.Red.Color(err.Error()),
+		chalk.Dim.TextStyle(resolution),
 	)
 
 	// Add the link if a valid one was supplied
