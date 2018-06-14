@@ -3,6 +3,7 @@ package printer
 import (
 	"fmt"
 	"os"
+	"io"
 	"sync"
 	"time"
 
@@ -20,18 +21,20 @@ var spinnerStyle int
 var previousProgressMessage string
 var previousStepMessage string
 var previousSubStepMessage string
+var writer io.Writer
 
 func init() {
 	verbose = false
 	color = "yellow"
 	spinnerStyle = 14
+	writer = os.Stdout
 }
 
 // Init the spinner with a verbose flag, and color.
 // This is optional, and allows some customisation over the printer.
 // You should do invoke this as early as posisble, before the first printer function
 // is called.
-func Init(initVerbose bool, initColor string, initSpinner int) {
+func Init(initVerbose bool, initColor string, initSpinner int, writer io.Writer) {
 	verbose = initVerbose
 	color = initColor
 	spinnerStyle = initSpinner
@@ -44,7 +47,7 @@ func getPrinter() *spinner.Spinner {
 	if instantiated == nil {
 		once.Do(func() {
 			instantiated = spinner.New(spinner.CharSets[spinnerStyle], 100*time.Millisecond)
-			instantiated.Writer = os.Stderr
+			instantiated.Writer = writer
 		})
 	}
 	return instantiated
