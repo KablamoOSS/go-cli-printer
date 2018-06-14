@@ -184,3 +184,7 @@ func Fatal(err error, resolution string, link string) {
 	fmt.Println(errMessage)
 	os.Exit(1)
 }
+
+func Stop() {
+	spinner.Stop()
+}
