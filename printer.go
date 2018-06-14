@@ -185,6 +185,8 @@ func Fatal(err error, resolution string, link string) {
 	os.Exit(1)
 }
 
+// Stop the spinner
 func Stop() {
+	spinner := getPrinter()
 	spinner.Stop()
 }
