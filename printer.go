@@ -123,7 +123,7 @@ func Error(err error, resolution string, link string) {
 
 	spinner.Stop()
 	errMessage := fmt.Sprintf(
-		"%s %s \n%s%s",
+		"%s %s",
 		chalk.Bold.TextStyle(chalk.Red.Color("✖  Error:")),
 		chalk.Red.Color(err.Error()),
 	)
@@ -140,7 +140,7 @@ func Error(err error, resolution string, link string) {
 		errMessage = fmt.Sprintf(
 			"%s\n%s%s",
 			errMessage,
-			chalk.Dim.TextStyle(chalk.Bold.TextStyle("🔗  More info: ")),
+			chalk.Dim.TextStyle(chalk.Bold.TextStyle("♾  More info: ")),
 			chalk.Italic.TextStyle(link),
 		)
 	}
@@ -154,7 +154,7 @@ func Fatal(err error, resolution string, link string) {
 	spinner := getPrinter()
 
 	errMessage := fmt.Sprintf(
-		"%s %s \n%s%s",
+		"%s %s",
 		chalk.Bold.TextStyle(chalk.Red.Color("✖  Fatal:")),
 		chalk.Red.Color(err.Error()),
 	)
@@ -172,7 +172,7 @@ func Fatal(err error, resolution string, link string) {
 		errMessage = fmt.Sprintf(
 			"%s\n%s%s",
 			errMessage,
-			chalk.Dim.TextStyle(chalk.Bold.TextStyle("🔗  More info: ")),
+			chalk.Dim.TextStyle(chalk.Bold.TextStyle("♾  More info: ")),
 			chalk.Italic.TextStyle(link),
 		)
 	}
