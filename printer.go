@@ -131,7 +131,7 @@ func Error(err error, resolution string, link string) {
 		errMessage = fmt.Sprintf(
 			"%s\n%s%s",
 			errMessage,
-			chalk.Dim.TextStyle(chalk.Bold.TextStyle("★  Resolution: ")),
+			chalk.Dim.TextStyle(chalk.Bold.TextStyle("☞  Resolution: ")),
 			chalk.Dim.TextStyle(resolution),
 		)
 	}
@@ -163,7 +163,7 @@ func Fatal(err error, resolution string, link string) {
 		errMessage = fmt.Sprintf(
 			"%s\n%s%s",
 			errMessage,
-			chalk.Dim.TextStyle(chalk.Bold.TextStyle("★  Resolution: ")),
+			chalk.Dim.TextStyle(chalk.Bold.TextStyle("☞  Resolution: ")),
 			chalk.Dim.TextStyle(resolution),
 		)
 	}
