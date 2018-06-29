@@ -14,6 +14,9 @@ import (
 var instantiated *spinner.Spinner
 var once sync.Once
 
+// Set to true when testing, to never call os.Exit
+var testing bool
+
 var verbose bool
 var color string
 var spinnerStyle int
@@ -28,16 +31,18 @@ func init() {
 	color = "yellow"
 	spinnerStyle = 14
 	writer = os.Stdout
+	testing = false
 }
 
 // Init the spinner with a verbose flag, and color.
 // This is optional, and allows some customisation over the printer.
 // You should do invoke this as early as posisble, before the first printer function
 // is called.
-func Init(initVerbose bool, initColor string, initSpinner int, writer io.Writer) {
+func Init(initVerbose bool, initColor string, initSpinner int, writer io.Writer, isTest bool) {
 	verbose = initVerbose
 	color = initColor
 	spinnerStyle = initSpinner
+	testing = isTest
 	getPrinter()
 }
 
@@ -182,7 +187,9 @@ func Fatal(err error, resolution string, link string) {
 
 	spinner.Stop()
 	fmt.Println(errMessage)
-	os.Exit(1)
+	if(testing == false){
+		os.Exit(1)
+	}
 }
 
 // Stop the spinner
