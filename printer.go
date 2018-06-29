@@ -38,12 +38,16 @@ func init() {
 // This is optional, and allows some customisation over the printer.
 // You should do invoke this as early as posisble, before the first printer function
 // is called.
-func Init(initVerbose bool, initColor string, initSpinner int, writer io.Writer, isTest bool) {
+func Init(initVerbose bool, initColor string, initSpinner int, writer io.Writer) {
 	verbose = initVerbose
 	color = initColor
 	spinnerStyle = initSpinner
-	testing = isTest
 	getPrinter()
+}
+
+// Test to set testing to true, to prevent exiting on Fatal errors
+func Test(){
+	testing = true
 }
 
 // Create a singleton to the Spinner
