@@ -126,7 +126,7 @@ func Warn(err error, resolution string, link string) {
 	spinner.Stop()
 	errMessage := fmt.Sprintf(
 		"%s %s",
-		chalk.Bold.TextStyle(chalk.Yellow.Color("✖  Error:")),
+		chalk.Bold.TextStyle(chalk.Yellow.Color("!  Error:")),
 		chalk.Yellow.Color(err.Error()),
 	)
 	if resolution != "" {
