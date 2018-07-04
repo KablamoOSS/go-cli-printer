@@ -6,7 +6,9 @@ import (
 	"io"
 	"sync"
 	"time"
+	"log"
 
+	"golang.org/x/crypto/ssh/terminal"
 	"github.com/briandowns/spinner"
 	"github.com/ttacon/chalk"
 )
@@ -26,12 +28,21 @@ var previousStepMessage string
 var previousSubStepMessage string
 var writer io.Writer
 
+// Is the output a full terminal
+var outputTTY bool
+
 func init() {
 	verbose = false
 	color = "yellow"
 	spinnerStyle = 14
 	writer = os.Stdout
 	testing = false
+
+	if terminal.IsTerminal(int(os.Stdout.Fd())) {
+		outputTTY = true
+	} else {
+		outputTTY = false
+	}
 }
 
 // Init the spinner with a verbose flag, and color.
@@ -64,6 +75,7 @@ func getPrinter() *spinner.Spinner {
 
 // Progress message with a spinner
 func Progress(message string) {
+	if(outputTTY){
 	spinner := getPrinter()
 	if message != previousProgressMessage {
 		previousProgressMessage = message
@@ -71,10 +83,12 @@ func Progress(message string) {
 		spinner.Color(color)
 	}
 	spinner.Start()
+	}
 }
 
 // Step prints a line console and stops the spinner
 func Step(message string) {
+	if(outputTTY){
 	if message != previousStepMessage {
 		previousStepMessage = message
 		spinner := getPrinter()
@@ -82,11 +96,15 @@ func Step(message string) {
 		spinner.Stop()
 		fmt.Println(fmt.Sprintf("%s  %s", chalk.Yellow.Color("➜"), chalk.Bold.TextStyle(message)))
 	}
+	} else {
+		log.Print(message)
+	}
 }
 
 // SubStep prints a line console, at a given indent and stops the spinner
 // ignoreVerboseRule true, ensures the SubStep always prints
 func SubStep(message string, indent int, last bool, ignoreVerboseRule bool) {
+	if(outputTTY){
 	if message != previousSubStepMessage {
 		previousSubStepMessage = message
 		// Substeps are only printed if the verbose flag is set at init
@@ -109,18 +127,26 @@ func SubStep(message string, indent int, last bool, ignoreVerboseRule bool) {
 			fmt.Println(fmt.Sprintf("%s%s %s", chalk.Dim.TextStyle(indentString), chalk.Dim.TextStyle(icon), chalk.Dim.TextStyle(message)))
 		}
 	}
+	} else {
+		log.Print(message)
+	}
 }
 
 // Finish prints message to the console and stops the spinner with success.
 // This is best used to indicated the end of a task
 func Finish(message string) {
+	if(outputTTY){
 	spinner := getPrinter()
 	spinner.Stop()
 	fmt.Println(fmt.Sprintf("%s  %s", chalk.Green.Color("✔"), chalk.Bold.TextStyle(message)))
+	} else {
+		log.Printf("✔ %s", message)
+	}
 }
 
 // Warn prints a warning to the screen. It's formatted like other errors, and coloured yellow.
 func Warn(err error, resolution string, link string) {
+	if(outputTTY){
 	spinner := getPrinter()
 
 	spinner.Stop()
@@ -148,6 +174,10 @@ func Warn(err error, resolution string, link string) {
 	}
 
 	fmt.Println(errMessage)
+
+	} else {
+		log.Printf("WARN: %s", err.Error())
+	}
 }
 
 
@@ -156,6 +186,7 @@ func Warn(err error, resolution string, link string) {
 // possible a link to futher information.
 // If the error doesn't have a link, pass a blank string ""
 func Error(err error, resolution string, link string) {
+	if(outputTTY){
 	spinner := getPrinter()
 
 	spinner.Stop()
@@ -183,12 +214,17 @@ func Error(err error, resolution string, link string) {
 	}
 
 	fmt.Println(errMessage)
+
+	} else {
+		log.Printf("ERROR: %s", err.Error())
+	}
 }
 
 // Fatal prints an error in the exact same way as Error, except it prefixes with "Fatal",
 // and the function ends with a panic
 func Fatal(err error, resolution string, link string) {
-	spinner := getPrinter()
+	if(outputTTY){
+		spinner := getPrinter()
 
 	errMessage := fmt.Sprintf(
 		"%s %s",
@@ -216,6 +252,11 @@ func Fatal(err error, resolution string, link string) {
 
 	spinner.Stop()
 	fmt.Println(errMessage)
+
+	} else {
+		log.Printf("FATAL: %s", err.Error())
+	}
+
 	if(testing == false){
 		os.Exit(1)
 	}
