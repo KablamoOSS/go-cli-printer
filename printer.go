@@ -105,6 +105,13 @@ func Progress(message string) {
 	}
 }
 
+// Progress with formatted message
+func Progressf(message string, args... interface{}) {
+	Progress(
+		fmt.Sprintf(message, args)
+	)
+}
+
 // Step prints a line console and stops the spinner
 func Step(message string) {
 	if outputTTY {
@@ -120,9 +127,16 @@ func Step(message string) {
 	}
 }
 
+// Step with formatted message
+func Step(message string, args... interface{}) {
+	Step(
+		fmt.Sprintf(message, args)
+	)
+}
+
 // SubStep prints a line console, at a given indent and stops the spinner
 // ignoreVerboseRule true, ensures the SubStep always prints
-func SubStep(message string, indent int, last bool, ignoreVerboseRule bool) {
+func SubStep(message string, indent int, last, ignoreVerboseRule bool) {
 	if outputTTY {
 		if message != previousSubStepMessage {
 			previousSubStepMessage = message
@@ -151,6 +165,18 @@ func SubStep(message string, indent int, last bool, ignoreVerboseRule bool) {
 	}
 }
 
+// SubStep with formatted message
+// FIXME: The extra arguments for SubStep being between the format string and
+// it's formatting arguments is rather awkward
+func SubStep(message string, indent int, last, ignoreVerboseRule bool, args... interface{}) {
+	SubStep(
+		fmt.Sprintf(message, args)
+		indent,
+		last,
+		ignoreVerboseRule,
+	)
+}
+
 // Finish prints message to the console and stops the spinner with success.
 // This is best used to indicated the end of a task
 func Finish(message string) {
@@ -161,6 +187,13 @@ func Finish(message string) {
 	} else {
 		log.Printf("✔ %s", message)
 	}
+}
+
+// Finish with formatted message
+func Finishf(message string, args... interface{}) {
+	Finish(
+		fmt.Sprintf(message, args)
+	)
 }
 
 // Warn prints a warning to the screen. It's formatted like other errors, and coloured yellow.
@@ -197,6 +230,13 @@ func Warn(err error, resolution string, link string) {
 	} else {
 		log.Printf("WARN: %s", err.Error())
 	}
+}
+
+// Warn with formatted message
+func Warnf(message string, args... interface{}) {
+	Warn(
+		fmt.Sprintf(message, args)
+	)
 }
 
 // Error prints an error to the screen. As it's intended reader is a user of your program,
@@ -236,6 +276,13 @@ func Error(err error, resolution string, link string) {
 	} else {
 		log.Printf("ERROR: %s", err.Error())
 	}
+}
+
+// Error with formatted message
+func Errorf(message string, args... interface{}) {
+	Error(
+		fmt.Sprintf(message, args)
+	)
 }
 
 // Fatal prints an error in the exact same way as Error, except it prefixes with "Fatal",
