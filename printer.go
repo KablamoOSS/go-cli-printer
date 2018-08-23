@@ -31,6 +31,18 @@ var writer io.Writer
 // Is the output a full terminal
 var outputTTY bool
 
+// Default way of terminating (from Fatal) is to os.Exit, but allow this to be
+// changed for the purposes of testing.
+var Terminate = ExitTerminate
+
+func ExitTerminate(err error) {
+	os.Exit(1)
+}
+
+func PanicTerminate(err error) {
+	panic(err)
+}
+
 func init() {
 	verbose = false
 	color = "yellow"
@@ -58,7 +70,7 @@ func Init(initVerbose bool, initColor string, initSpinner int, writer io.Writer)
 
 // Test to set testing to true, to prevent exiting on Fatal errors
 func Test() {
-	testing = true
+	Terminate = PanicTerminate
 }
 
 // SetOutput to an io.Writer compatitble interface. Designed
@@ -263,9 +275,7 @@ func Fatal(err error, resolution string, link string) {
 		log.Printf("FATAL: %s", err.Error())
 	}
 
-	if testing == false {
-		os.Exit(1)
-	}
+	Terminate(err)
 }
 
 // Stop the spinner
