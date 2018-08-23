@@ -106,9 +106,9 @@ func Progress(message string) {
 }
 
 // Progress with formatted message
-func Progressf(message string, args... interface{}) {
+func Progressf(message string, args ...interface{}) {
 	Progress(
-		fmt.Sprintf(message, args)
+		fmt.Sprintf(message, args),
 	)
 }
 
@@ -128,9 +128,9 @@ func Step(message string) {
 }
 
 // Step with formatted message
-func Step(message string, args... interface{}) {
+func Stepf(message string, args ...interface{}) {
 	Step(
-		fmt.Sprintf(message, args)
+		fmt.Sprintf(message, args),
 	)
 }
 
@@ -168,9 +168,9 @@ func SubStep(message string, indent int, last, ignoreVerboseRule bool) {
 // SubStep with formatted message
 // FIXME: The extra arguments for SubStep being between the format string and
 // it's formatting arguments is rather awkward
-func SubStep(message string, indent int, last, ignoreVerboseRule bool, args... interface{}) {
+func SubStepf(message string, indent int, last, ignoreVerboseRule bool, args ...interface{}) {
 	SubStep(
-		fmt.Sprintf(message, args)
+		fmt.Sprintf(message, args),
 		indent,
 		last,
 		ignoreVerboseRule,
@@ -190,9 +190,9 @@ func Finish(message string) {
 }
 
 // Finish with formatted message
-func Finishf(message string, args... interface{}) {
+func Finishf(message string, args ...interface{}) {
 	Finish(
-		fmt.Sprintf(message, args)
+		fmt.Sprintf(message, args),
 	)
 }
 
@@ -232,13 +232,6 @@ func Warn(err error, resolution string, link string) {
 	}
 }
 
-// Warn with formatted message
-func Warnf(message string, args... interface{}) {
-	Warn(
-		fmt.Sprintf(message, args)
-	)
-}
-
 // Error prints an error to the screen. As it's intended reader is a user of your program,
 // it expects both the error message, a way for the reader to resolve the error, and if
 // possible a link to futher information.
@@ -276,13 +269,6 @@ func Error(err error, resolution string, link string) {
 	} else {
 		log.Printf("ERROR: %s", err.Error())
 	}
-}
-
-// Error with formatted message
-func Errorf(message string, args... interface{}) {
-	Error(
-		fmt.Sprintf(message, args)
-	)
 }
 
 // Fatal prints an error in the exact same way as Error, except it prefixes with "Fatal",
